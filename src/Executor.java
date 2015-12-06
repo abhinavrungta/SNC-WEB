@@ -15,7 +15,7 @@ public class Executor implements Callable<Integer> {
 		this.model = model;
 		this.influence = new ConcurrentHashMap<Integer, NodeState>();
 		this.seed = seed;
-		this.productId = 0;
+		this.productId = this.model.movieRatings.keySet().iterator().next();
 	}
 
 	@Override
