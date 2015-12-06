@@ -1,0 +1,9 @@
+javac GraphGeneration.java
+java GraphGeneration yahoo/ydata-ymovies-user-movie-ratings-train-v1_0.txt yahoo/ydata-ymovies-user-movie-ratings-test-v1_0.txt
+
+javac -cp .:libs/commons-math3-3.5.jar LTC.java
+
+java -Dcores=16 -cp .:libs/commons-math3-3.5.jar LTC 50 datasets/edge_weights.txt datasets/adoption_probabilities.txt asd datasets/average_user_ratings.txt datasets/average_movie_ratings.txt yahoo/ydata-ymovies-user-movie-ratings-test-v1_0.txt
+
+java -Dcores=16 -Xmx16384m -cp .:libs/commons-math3-3.5.jar LTC 50 datasets/edge_weights.txt datasets/adoption_probabilities.txt asd datasets/average_user_ratings.txt datasets/average_movie_ratings.txt ydata-ymovies-user-movie-ratings-test-v1_0.txt > output.txt &
+
