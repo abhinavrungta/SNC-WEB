@@ -5,13 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.PriorityQueue;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -20,8 +19,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import org.apache.commons.math3.util.CombinatoricsUtils;
 
 class MarginalGain {
 	int nodeId;
@@ -52,13 +49,11 @@ public class LTC {
 	ConcurrentHashMap<Integer, Node> usersList;
 	ConcurrentHashMap<Integer, Float> userRatings;
 	ConcurrentHashMap<Integer, Float> movieRatings;
-	ConcurrentHashMap<Integer, Set<Integer>> inverseSet;
-	Object[] userArray = null;
-	long noOfEdges = 0;
 	static float rMin = 1.0f;
 	static float rMax = 5.0f;
 	int noOfMonteCarloSims = 1000;
 	Set<Integer> seedSet;
+	Random rand;
 	ExecutorService executorService;
 
 	public LTC() {
@@ -70,41 +65,26 @@ public class LTC {
 
 	public static void main(String[] args) throws FileNotFoundException {
 		LTC app = new LTC();
+		System.out.println(System.currentTimeMillis());
+		app.noOfMonteCarloSims = Integer.parseInt(args[6]);
 		app.loadGraph(args[1]);
 		app.loadProbabilities(args[2]);
-		app.loadValues(args[3]);
-		app.loadRatings(args[4], args[5], args[6]);
-		long start = System.currentTimeMillis();
-		int theta = app.parameterEstimation(50);
-		System.out.println("Parameter Theta " + theta);
-		app.seedSet = app.NodeSelection(50, 100000);
+		app.loadRatings(args[3], args[4], args[5]);
+		app.seedSet = app.runCELF(Integer.parseInt(args[0]));
 		Iterator<Integer> itr = app.seedSet.iterator();
 		while (itr.hasNext()) {
 			System.out.print(itr.next() + ", ");
 		}
-		System.out.println();
-		System.out.println(app.expectedSpread(app.seedSet, 1000));
-		long mid = System.currentTimeMillis();
-		System.out.println(mid - start);
-
-		// app.seedSet = app.runCELF(Integer.parseInt(args[0]));
-		// app.seedSet = app.runCELF(5);
-		// itr = app.seedSet.iterator();
-		// while (itr.hasNext()) {
-		// System.out.print(itr.next() + ", ");
-		// }
-		// long end = System.currentTimeMillis();
-		// System.out.println(end-mid);
 		app.executorService.shutdown();
+		System.out.println(System.currentTimeMillis());
+		app.serializeMap("graph_new.ser");
 	}
 
 	public void loadGraph(String edgeList) throws FileNotFoundException {
 		File inputFile = new File(edgeList);
 		usersList = new ConcurrentHashMap<Integer, Node>();
 		Scanner stdin = new Scanner(inputFile);
-		noOfEdges = 0;
 		while (stdin.hasNext()) {
-			noOfEdges++;
 			String[] data = stdin.nextLine().split("\t");
 			int user1 = Integer.parseInt(data[0]);
 			int user2 = Integer.parseInt(data[1]);
@@ -123,7 +103,6 @@ public class LTC {
 			usersList.get(user2).addToInLinkList(user1, weight);
 
 		}
-		userArray = usersList.keySet().toArray();
 		stdin.close();
 	}
 
@@ -220,105 +199,6 @@ public class LTC {
 
 	public Set<Integer> getCalculatedSeed() {
 		return seedSet;
-	}
-
-	public Set<Integer> NodeSelection(int k, int theta) {
-		inverseSet = new ConcurrentHashMap<Integer, Set<Integer>>();
-		Iterator<Integer> itr = usersList.keySet().iterator();
-		while (itr.hasNext()) {
-			inverseSet.put(itr.next(), new HashSet<Integer>());
-		}
-		Set<Integer> resultSet = new HashSet<Integer>();
-
-		Set<Callable<Integer>> callables = new HashSet<Callable<Integer>>();
-		for (int i = 0; i < theta; i++)
-			callables.add(new RRSetExecutor(this, i));
-		List<Future<Integer>> futures;
-		try {
-			futures = executorService.invokeAll(callables);
-			for (Future<Integer> future : futures) {
-				future.get();
-			}
-		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-		}
-
-		for (int i = 0; i < k; i++) {
-			Entry<Integer, Set<Integer>> max = Collections.max(inverseSet.entrySet(),
-					new Comparator<Entry<Integer, Set<Integer>>>() {
-						@Override
-						public int compare(Entry<Integer, Set<Integer>> o1, Entry<Integer, Set<Integer>> o2) {
-							return o1.getValue().size() > o2.getValue().size() ? 1 : -1;
-						}
-					});
-			resultSet.add(max.getKey());
-			Set<Integer> setsCovered = max.getValue();
-			inverseSet.remove(max.getKey());
-			Iterator<Integer> itr2 = inverseSet.keySet().iterator();
-			while (itr2.hasNext()) {
-				inverseSet.get(itr2.next()).removeAll(setsCovered);
-			}
-		}
-		return resultSet;
-	}
-
-	public int parameterEstimation(int k) {
-		// approximation is (1 - 1/e - epsilon)
-		double e = Math.E;
-		double epsilon = 0.1;
-		// probability of the solution where n is the size of the network. ( 1 -
-		// pow(n, -l))
-		// n = 1000000, l = 0.5 gives 0.999 probability.
-		// k = 50, epsilon = 0.2, l = 0.7
-		double l = 0.5;
-		int n = usersList.size();
-		System.out.println("Size " + n);
-		double logN = Math.log(n);
-
-		double lambda = (8 + 2 * epsilon) * n
-				* (l * logN + CombinatoricsUtils.binomialCoefficientLog(n, k) + Math.log(2)) * Math.pow(epsilon, -2);
-		System.out.println("Lambda " + lambda);
-		System.out.println("Approximation " + (1 - 1 / e - epsilon));
-		System.out.println("Probability " + (1 - Math.pow(n, -l)));
-
-		double c = 6 * l * logN + 6 * Math.log(logN / Math.log(2));
-		System.out.println("Constant " + c);
-		System.out.println("Range " + (logN / Math.log(2)));
-
-		inverseSet = new ConcurrentHashMap<Integer, Set<Integer>>();
-		Iterator<Integer> itr = usersList.keySet().iterator();
-		while (itr.hasNext()) {
-			inverseSet.put(itr.next(), new HashSet<Integer>());
-		}
-		for (double i = 1; i <= (logN / Math.log(2)) - 1; i++) {
-			double c_i = c * Math.pow(2, i);
-			double sum = 0;
-
-			Set<Callable<Integer>> callables = new HashSet<Callable<Integer>>();
-			for (double j = 1; j < c_i; j++) {
-				callables.add(new RRSetExecutor(this, (int) j));
-			}
-			List<Future<Integer>> futures;
-			try {
-				futures = executorService.invokeAll(callables);
-				for (Future<Integer> future : futures) {
-					double width = (double) future.get();
-					double k_r = 1 - Math.pow(1 - width / noOfEdges, k);
-					sum += k_r;
-				}
-			} catch (InterruptedException | ExecutionException err) {
-				err.printStackTrace();
-			}
-
-			System.out.println("Sum " + sum);
-			if (sum > c) {
-				System.out.println("KPT " + (n * sum / (2 * c_i)));
-				return (int) (lambda / (n * sum / (2 * c_i)));
-			}
-
-		}
-		return (int) lambda;
-
 	}
 
 	// calculate expected spread for a seed set by running monte carlo

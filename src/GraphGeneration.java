@@ -16,9 +16,29 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.apache.commons.math3.distribution.BetaDistribution;
 
 public class GraphGeneration {
+	private static String edgeFilePath;
+	private static String adoProbFilePath;
+	private static String avgRateFilePath;
+	private static String movieRateFilePath;
 
-	public static void main(String[] args) throws IOException {
-		File trainingFile = new File(args[0]);
+	public static String getEdgeFile() {
+		return edgeFilePath;
+	}
+
+	public static String getAdoProbFile() {
+		return adoProbFilePath;
+	}
+
+	public static String getAvgRateFile() {
+		return avgRateFilePath;
+	}
+
+	public static String getMovieRateFile() {
+		return movieRateFilePath;
+	}
+
+	public GraphGeneration(String trainingPath) throws IOException {
+		File trainingFile = new File(trainingPath);
 		readFromFile(trainingFile);
 	}
 
@@ -90,7 +110,8 @@ public class GraphGeneration {
 		}
 		System.out.println("Number of edges is " + edgeCount);
 
-		FileWriter fileWriter = new FileWriter("datasets/edge_weights.txt");
+		edgeFilePath = "datasets/edge_weights.txt";
+		FileWriter fileWriter = new FileWriter(edgeFilePath);
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
 		for (int i = 0; i < size; i++) {
@@ -186,7 +207,8 @@ public class GraphGeneration {
 		double sum;
 		int count;
 
-		FileWriter fileWriter = new FileWriter("datasets/average_movie_ratings.txt");
+		movieRateFilePath = "datasets/average_movie_ratings.txt";
+		FileWriter fileWriter = new FileWriter(movieRateFilePath);
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
 		while (iterator.hasNext()) {
@@ -212,10 +234,12 @@ public class GraphGeneration {
 		int count;
 		int adoptCount = 0;
 
-		FileWriter fileWriter1 = new FileWriter("datasets/average_user_ratings.txt");
+		avgRateFilePath = "datasets/average_user_ratings.txt";
+		FileWriter fileWriter1 = new FileWriter(avgRateFilePath);
 		BufferedWriter bufferedWriter1 = new BufferedWriter(fileWriter1);
 
-		FileWriter fileWriter2 = new FileWriter("datasets/adoption_probabilities.txt");
+		adoProbFilePath = "datasets/adoption_probabilities.txt";
+		FileWriter fileWriter2 = new FileWriter(adoProbFilePath);
 		BufferedWriter bufferedWriter2 = new BufferedWriter(fileWriter2);
 
 		while (iterator.hasNext()) {
@@ -238,6 +262,8 @@ public class GraphGeneration {
 			double adoptProbability = ((double) adoptCount) / count;
 			bufferedWriter2.write(userId + "\t" + adoptProbability + "\t" + ThreadLocalRandom.current().nextFloat()
 					+ "\t" + mu.inverseCumulativeProbability(ThreadLocalRandom.current().nextDouble()) + "\n");
+			// bufferedWriter2.write(userId + "\t" + adoptProbability + "\n");
+
 		}
 
 		bufferedWriter2.close();

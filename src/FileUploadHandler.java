@@ -44,6 +44,13 @@ public class FileUploadHandler extends HttpServlet {
 						item.write(new File(UPLOAD_DIRECTORY + File.separator + name));
 					}
 				}
+				// get these from user input.
+				String[] arg = new String[4];
+				arg[0] = "/tmp/yahoo.txt";
+				arg[1] = "LTC";
+				arg[2] = "30";
+				arg[3] = "1";
+				Main.main(arg);
 
 				// File uploaded successfully
 				request.setAttribute("message", "File Uploaded Successfully");

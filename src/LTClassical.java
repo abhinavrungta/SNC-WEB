@@ -1,6 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Iterator;
 import java.util.Scanner;
 
 public class LTClassical extends LTC {
@@ -13,13 +12,13 @@ public class LTClassical extends LTC {
 	public static void main(String[] args) throws FileNotFoundException {
 		LTClassical app = new LTClassical();
 		long start = System.currentTimeMillis();
+		app.noOfMonteCarloSims = Integer.parseInt(args[6]);
 		app.loadGraph(args[1]);
 		app.loadProbabilities(args[2]);
-		app.loadValues(args[3]);
 		app.seedSet = app.runCELF(Integer.parseInt(args[0]));
 		app.executorService.shutdown();
 		long end = System.currentTimeMillis();
-		System.out.println("Time taken " + (end-start));
+		System.out.println("Time taken " + (end - start));
 	}
 
 	public void loadProbabilities(String adoptionProbFile) throws FileNotFoundException {
