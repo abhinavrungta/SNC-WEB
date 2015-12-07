@@ -1,5 +1,9 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Scanner;
 
 public class LTClassical extends LTC {
@@ -9,8 +13,11 @@ public class LTClassical extends LTC {
 		noOfMonteCarloSims = 1;
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		LTClassical app = new LTClassical();
+		app.fout = new File("output_ltclassic.txt");
+		app.fos = new FileOutputStream(app.fout);
+		app.bw = new BufferedWriter(new OutputStreamWriter(app.fos));
 		long start = System.currentTimeMillis();
 		app.noOfMonteCarloSims = Integer.parseInt(args[6]);
 		app.loadGraph(args[1]);

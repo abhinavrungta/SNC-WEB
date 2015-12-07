@@ -1,3 +1,4 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -5,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -55,16 +57,22 @@ public class LTC {
 	Set<Integer> seedSet;
 	Random rand;
 	ExecutorService executorService;
+	File fout;
+	FileOutputStream fos;
+	BufferedWriter bw;
 
-	public LTC() {
+	public LTC(){
 		int cores = 16;
 		if (System.getProperty("cores") != null)
 			cores = Integer.parseInt(System.getProperty("cores"));
 		executorService = Executors.newFixedThreadPool(cores);
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		LTC app = new LTC();
+		app.fout = new File("output_ltc.txt");
+		app.fos = new FileOutputStream(app.fout);
+		app.bw = new BufferedWriter(new OutputStreamWriter(app.fos));
 		System.out.println(System.currentTimeMillis());
 		app.noOfMonteCarloSims = Integer.parseInt(args[6]);
 		app.loadGraph(args[1]);
@@ -221,7 +229,7 @@ public class LTC {
 		return expectedCoverage / noOfMonteCarloRuns;
 	}
 
-	public Set<Integer> runCELF(int k) {
+	public Set<Integer> runCELF(int k) throws IOException {
 		PriorityQueue<MarginalGain> gains = new PriorityQueue<MarginalGain>(1, new GainComparator());
 		Set<Integer> seed = new HashSet<Integer>();
 		float totalCoverage = 0.0f;
@@ -243,6 +251,9 @@ public class LTC {
 
 		System.out.println("Seed Size\tExpected Spread\tNode Id");
 		System.out.println("1\t" + totalCoverage + "\t" + nodeGain.nodeId);
+		bw.write("Seed Size\tExpected Spread\tNode Id");
+		bw.newLine();
+		bw.write("1\t" + totalCoverage + "\t" + nodeGain.nodeId);
 
 		while (seed.size() < k && gains.size() > 0) {
 			MarginalGain tmpSeed = gains.poll();
@@ -252,12 +263,15 @@ public class LTC {
 			if (gains.size() > 0 && newCoverage - totalCoverage >= gains.peek().gain) {
 				totalCoverage = newCoverage;
 				System.out.println(seed.size() + "\t" + totalCoverage + "\t" + tmpSeed.nodeId);
+				bw.newLine();
+				bw.write(seed.size() + "\t" + totalCoverage + "\t" + tmpSeed.nodeId);
 			} else {
 				seed.remove(tmpSeed.nodeId);
 				tmpSeed.gain = newCoverage - totalCoverage;
 				gains.add(tmpSeed);
 			}
 		}
+		bw.close();
 		return seed;
 	}
 

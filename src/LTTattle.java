@@ -1,4 +1,8 @@
-import java.io.FileNotFoundException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 public class LTTattle extends LTC {
 
@@ -6,8 +10,11 @@ public class LTTattle extends LTC {
 		super();
 	}
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		LTTattle app = new LTTattle();
+		app.fout = new File("output_lttattle.txt");
+		app.fos = new FileOutputStream(app.fout);
+		app.bw = new BufferedWriter(new OutputStreamWriter(app.fos));
 		long start = System.currentTimeMillis();
 		app.noOfMonteCarloSims = Integer.parseInt(args[6]);
 		app.loadGraph(args[1]);
