@@ -60,12 +60,14 @@ public class LTC {
 	File fout;
 	FileOutputStream fos;
 	BufferedWriter bw;
+	int productId;
 
 	public LTC(){
 		int cores = 16;
 		if (System.getProperty("cores") != null)
 			cores = Integer.parseInt(System.getProperty("cores"));
 		executorService = Executors.newFixedThreadPool(cores);
+		productId = 0;
 	}
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
@@ -78,6 +80,7 @@ public class LTC {
 		app.loadGraph(args[1]);
 		app.loadProbabilities(args[2]);
 		app.loadRatings(args[3], args[4], args[5]);
+		app.productId = app.movieRatings.keySet().iterator().next();
 		app.seedSet = app.runCELF(Integer.parseInt(args[0]));
 		Iterator<Integer> itr = app.seedSet.iterator();
 		while (itr.hasNext()) {

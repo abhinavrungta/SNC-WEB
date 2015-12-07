@@ -9,13 +9,11 @@ public class Executor implements Callable<Integer> {
 	LTC model = null;
 	ConcurrentHashMap<Integer, NodeState> influence = null;
 	Set<Integer> seed;
-	int productId;
 
 	public Executor(LTC model, Set<Integer> seed) {
 		this.model = model;
 		this.influence = new ConcurrentHashMap<Integer, NodeState>();
 		this.seed = seed;
-		this.productId = this.model.movieRatings.keySet().iterator().next();
 	}
 
 	@Override
@@ -42,7 +40,7 @@ public class Executor implements Callable<Integer> {
 			while (outLinks.hasNext()) {
 				NodeState v = influence.get(outLinks.next());
 				if (v.getState() == State.INACTIVE && u.getState() != State.INACTIVE) {
-					rating = model.getRating(nodeId, productId, u.getState());
+					rating = model.getRating(nodeId, this.model.productId, u.getState());
 					if (v.updateCurrentThreshold(u, rating) >= v.node.getActivationThreshold()) {
 						v.setState(State.ACTIVE);
 						activeNodes.add(v.node.getUserId());

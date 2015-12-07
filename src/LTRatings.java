@@ -23,6 +23,7 @@ public class LTRatings extends LTC {
 		app.loadGraph(args[1]);
 		app.loadProbabilities(args[2]);
 		app.loadRatings(args[3], args[4], args[5]);
+		app.productId = app.movieRatings.keySet().iterator().next();
 		app.seedSet = app.runCELF(Integer.parseInt(args[0]));
 		app.executorService.shutdown();
 		long end = System.currentTimeMillis();
