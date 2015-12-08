@@ -72,7 +72,7 @@ public class LTC {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		LTC app = new LTC();
-		app.fout = new File("output_ltc.txt");
+		app.fout = new File("/tmp/output_ltc.txt");
 		app.fos = new FileOutputStream(app.fout);
 		app.bw = new BufferedWriter(new OutputStreamWriter(app.fos));
 		System.out.println(System.currentTimeMillis());
@@ -88,7 +88,7 @@ public class LTC {
 		}
 		app.executorService.shutdown();
 		System.out.println(System.currentTimeMillis());
-		app.serializeMap("graph_new.ser");
+		app.serializeMap("/tmp/graph_new.ser");
 	}
 
 	public void loadGraph(String edgeList) throws FileNotFoundException {
@@ -238,10 +238,10 @@ public class LTC {
 		float totalCoverage = 0.0f;
 
 		Iterator<Integer> itr = usersList.keySet().iterator();
+		System.out.println("Calculating Expected Spread for Individual Nodes");
 		// calculate expected spread for {v} only.
 		while (itr.hasNext()) {
-			int nodeId = itr.next();
-			System.out.println("Calculating Spread for " + nodeId);
+			int nodeId = itr.next();			
 			seed.add(nodeId);
 			float marginalGain = expectedSpread(seed, noOfMonteCarloSims);
 			gains.add(new MarginalGain(nodeId, marginalGain));
@@ -284,6 +284,7 @@ public class LTC {
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(usersList);
 			out.writeObject(seedSet);
+			
 			out.flush();
 			out.close();
 			fileOut.close();

@@ -77,15 +77,15 @@ public class GraphGeneration {
 
 		double avgRating = (double) (sum / count);
 
-		System.out.println("Average of all movie ratings is " + avgRating);
-		System.out.println("Number of users is " + userRatings.size());
-		System.out.println("Number of movies is " + movieRatings.size());
+		//System.out.println("Average of all movie ratings is " + avgRating);
+		System.out.println("Number of nodes are " + userRatings.size());
+		//System.out.println("Number of movies is " + movieRatings.size());
 
 		calculateAvgMovieRating(movieRatings);
-		System.out.println("Average of movie ratings done");
+		//System.out.println("Average of movie ratings done");
 
 		calculateAdoptionProbabilties(userRatings, avgRating);
-		System.out.println("Average of user ratings done");
+		//System.out.println("Average of user ratings done");
 
 		calculateEdges(userRatings);
 
@@ -133,7 +133,7 @@ public class GraphGeneration {
 
 		bufferedWriter.close();
 		fileWriter.close();
-		System.out.println("Edge weight calculation done");
+		//System.out.println("Edge weight calculation done");
 	}
 
 	private static void createEdge(Map<Integer, Map<Integer, Double>> edges, int userA, int userB,
