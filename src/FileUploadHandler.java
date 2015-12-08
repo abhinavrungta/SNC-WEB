@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -37,23 +39,37 @@ public class FileUploadHandler extends HttpServlet {
 		if (ServletFileUpload.isMultipartContent(request)) {
 			try {
 				List<FileItem> multiparts = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
-
+				String fileName = "";
+				List<String> models = new ArrayList<String>();
 				for (FileItem item : multiparts) {
 					if (!item.isFormField()) {
 						String name = new File(item.getName()).getName();
-						item.write(new File(UPLOAD_DIRECTORY + File.separator + name));
+						fileName = UPLOAD_DIRECTORY + File.separator + "input.txt";
+						item.write(new File(fileName));
+					} else {
+						if ("on".equals(item.getString()))
+							models.add(item.getFieldName());
 					}
 				}
+				String modelString = String.join(",", models);
+				int size = 30;
+				// System.out.println(modelString);
 				// get these from user input.
 				String[] arg = new String[4];
-				arg[0] = "/tmp/yahoo.txt";
-				arg[1] = "LTC";
-				arg[2] = "30";
+				// arg[0] = "/tmp/yahoo.txt";
+				arg[0] = fileName;
+				arg[1] = modelString;
+				arg[2] = Integer.toString(size);
 				arg[3] = "1";
-				Main.main(arg);
+				// Main.main(arg);
 
 				// File uploaded successfully
+				request.setAttribute("models", modelString);
+				request.setAttribute("seedSet", size);
 				request.setAttribute("message", "File Uploaded Successfully");
+
+				// ChartServlet chartServlet = new ChartServlet();
+				// chartServlet.doGet(request, response);
 			} catch (Exception ex) {
 				request.setAttribute("message", "File Upload Failed due to " + ex);
 			}
@@ -61,8 +77,8 @@ public class FileUploadHandler extends HttpServlet {
 		} else {
 			request.setAttribute("message", "Sorry this Servlet only handles file upload request");
 		}
-
-		request.getRequestDispatcher("/result.jsp").forward(request, response);
+		System.out.println("Here");
+		request.getRequestDispatcher("/DataSetDisplay.jsp").forward(request, response);
 
 	}
 

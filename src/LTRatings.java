@@ -15,7 +15,7 @@ public class LTRatings extends LTC {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		LTRatings app = new LTRatings();
-		app.fout = new File("output_ltratings.txt");
+		app.fout = new File("/tmp/output_ltratings.txt");
 		app.fos = new FileOutputStream(app.fout);
 		app.bw = new BufferedWriter(new OutputStreamWriter(app.fos));
 		long start = System.currentTimeMillis();

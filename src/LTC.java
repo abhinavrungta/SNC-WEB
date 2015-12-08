@@ -62,7 +62,7 @@ public class LTC {
 	BufferedWriter bw;
 	int productId;
 
-	public LTC(){
+	public LTC() {
 		int cores = 16;
 		if (System.getProperty("cores") != null)
 			cores = Integer.parseInt(System.getProperty("cores"));
@@ -237,11 +237,11 @@ public class LTC {
 		Set<Integer> seed = new HashSet<Integer>();
 		float totalCoverage = 0.0f;
 
+		System.out.println("Calculating Spread for Nodes");
 		Iterator<Integer> itr = usersList.keySet().iterator();
-		System.out.println("Calculating Expected Spread for Individual Nodes");
 		// calculate expected spread for {v} only.
 		while (itr.hasNext()) {
-			int nodeId = itr.next();			
+			int nodeId = itr.next();
 			seed.add(nodeId);
 			float marginalGain = expectedSpread(seed, noOfMonteCarloSims);
 			gains.add(new MarginalGain(nodeId, marginalGain));
@@ -284,7 +284,6 @@ public class LTC {
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(usersList);
 			out.writeObject(seedSet);
-			
 			out.flush();
 			out.close();
 			fileOut.close();

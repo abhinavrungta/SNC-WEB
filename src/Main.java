@@ -7,7 +7,7 @@ public class Main {
 	@SuppressWarnings("unchecked")
 	public static void main(String[] arg) throws IOException {
 		String trainFile = arg[0];
-		String model = arg[1];
+		String[] models = arg[1].split(",");
 		String seedSet = arg[2];
 		String monteCarlo = arg[3];
 
@@ -31,26 +31,29 @@ public class Main {
 		args[4] = graphGene.getMovieRateFile();
 		args[5] = trainFile;
 		args[6] = monteCarlo;
+		for (String model : models) {
+			System.out.println("Model is " + model);
+			switch (model) {
+			case "color": {
+				LTC.main(args);
+				break;
+			}
+			case "classical": {
+				LTClassical.main(args);
+				break;
+			}
+			case "ratings": {
+				LTRatings.main(args);
+				break;
+			}
+			case "tattle": {
+				LTTattle.main(args);
+				break;
+			}
+			default:
+				break;
+			}
+		}
 
-		switch (model) {
-		case "LTC": {
-			LTC.main(args);
-			break;
-		}
-		case "LTClassical": {
-			LTClassical.main(args);
-			break;
-		}
-		case "LTRatings": {
-			LTRatings.main(args);
-			break;
-		}
-		case "LTTattle": {
-			LTTattle.main(args);
-			break;
-		}
-		default:
-			break;
-		}
 	}
 }

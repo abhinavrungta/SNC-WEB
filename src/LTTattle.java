@@ -12,7 +12,7 @@ public class LTTattle extends LTC {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		LTTattle app = new LTTattle();
-		app.fout = new File("output_lttattle.txt");
+		app.fout = new File("/tmp/output_lttattle.txt");
 		app.fos = new FileOutputStream(app.fout);
 		app.bw = new BufferedWriter(new OutputStreamWriter(app.fos));
 		long start = System.currentTimeMillis();

@@ -15,7 +15,7 @@ public class LTClassical extends LTC {
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
 		LTClassical app = new LTClassical();
-		app.fout = new File("output_ltclassic.txt");
+		app.fout = new File("/tmp/output_ltclassic.txt");
 		app.fos = new FileOutputStream(app.fout);
 		app.bw = new BufferedWriter(new OutputStreamWriter(app.fos));
 		long start = System.currentTimeMillis();

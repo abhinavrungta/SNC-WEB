@@ -77,15 +77,13 @@ public class GraphGeneration {
 
 		double avgRating = (double) (sum / count);
 
-		//System.out.println("Average of all movie ratings is " + avgRating);
-		System.out.println("Number of nodes are " + userRatings.size());
-		//System.out.println("Number of movies is " + movieRatings.size());
+		System.out.println("Average of all movie ratings is " + avgRating);
+		System.out.println("Number of users is " + userRatings.size());
+		System.out.println("Number of movies is " + movieRatings.size());
 
 		calculateAvgMovieRating(movieRatings);
-		//System.out.println("Average of movie ratings done");
 
 		calculateAdoptionProbabilties(userRatings, avgRating);
-		//System.out.println("Average of user ratings done");
 
 		calculateEdges(userRatings);
 
@@ -110,7 +108,7 @@ public class GraphGeneration {
 		}
 		System.out.println("Number of edges is " + edgeCount);
 
-		edgeFilePath = "datasets/edge_weights.txt";
+		edgeFilePath = "/tmp/edge_weights.txt";
 		FileWriter fileWriter = new FileWriter(edgeFilePath);
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
@@ -133,7 +131,6 @@ public class GraphGeneration {
 
 		bufferedWriter.close();
 		fileWriter.close();
-		//System.out.println("Edge weight calculation done");
 	}
 
 	private static void createEdge(Map<Integer, Map<Integer, Double>> edges, int userA, int userB,
@@ -207,7 +204,7 @@ public class GraphGeneration {
 		double sum;
 		int count;
 
-		movieRateFilePath = "datasets/average_movie_ratings.txt";
+		movieRateFilePath = "/tmp/average_movie_ratings.txt";
 		FileWriter fileWriter = new FileWriter(movieRateFilePath);
 		BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
@@ -234,11 +231,11 @@ public class GraphGeneration {
 		int count;
 		int adoptCount = 0;
 
-		avgRateFilePath = "datasets/average_user_ratings.txt";
+		avgRateFilePath = "/tmp/average_user_ratings.txt";
 		FileWriter fileWriter1 = new FileWriter(avgRateFilePath);
 		BufferedWriter bufferedWriter1 = new BufferedWriter(fileWriter1);
 
-		adoProbFilePath = "datasets/adoption_probabilities.txt";
+		adoProbFilePath = "/tmp/adoption_probabilities.txt";
 		FileWriter fileWriter2 = new FileWriter(adoProbFilePath);
 		BufferedWriter bufferedWriter2 = new BufferedWriter(fileWriter2);
 
