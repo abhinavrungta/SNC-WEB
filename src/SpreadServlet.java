@@ -38,18 +38,31 @@ public class SpreadServlet extends DataSourceServlet {
 		Map<Integer, Double> classicalMap = readFromFile("/tmp/output_ltclassic.txt");
 		Map<Integer, Double> ratingsMap = readFromFile("/tmp/output_ltratings.txt");
 		Map<Integer, Double> tattleMap = readFromFile("/tmp/output_lttattle.txt");
+		int size = 0;
 		List<ColumnDescription> cd = new ArrayList<ColumnDescription>();
 		cd.add(new ColumnDescription("seed_set_size", ValueType.NUMBER, "Seed Set Size"));
 		if (colorMap != null)
+		{
 			cd.add(new ColumnDescription("color", ValueType.NUMBER, "LT-Color"));
+			size = colorMap.size();
+		}
 		if (classicalMap != null)
+		{
 			cd.add(new ColumnDescription("classic", ValueType.NUMBER, "LT-Classical"));
+			size = classicalMap.size();
+		}
 		if (ratingsMap != null)
+		{
 			cd.add(new ColumnDescription("ratings", ValueType.NUMBER, "LT-Ratings"));
+			size = ratingsMap.size();
+		}
 		if (tattleMap != null)
+		{
 			cd.add(new ColumnDescription("tattle", ValueType.NUMBER, "LT-Tattle"));
+			size = tattleMap.size();
+		}
 		dataTable.addColumns(cd);
-		int size = colorMap.size();
+		
 		System.out.println("Size is " + size);
 		for (int i = 1; i <= size; i++) {
 			TableRow row = new TableRow();

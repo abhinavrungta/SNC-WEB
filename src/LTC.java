@@ -54,6 +54,7 @@ public class LTC {
 	static float rMin = 1.0f;
 	static float rMax = 5.0f;
 	int noOfMonteCarloSims = 1000;
+	float totalCoverage = 0.0f;
 	Set<Integer> seedSet;
 	Random rand;
 	ExecutorService executorService;
@@ -75,7 +76,7 @@ public class LTC {
 		app.fout = new File("/tmp/output_ltc.txt");
 		app.fos = new FileOutputStream(app.fout);
 		app.bw = new BufferedWriter(new OutputStreamWriter(app.fos));
-		System.out.println(System.currentTimeMillis());
+		long start = System.currentTimeMillis();
 		app.noOfMonteCarloSims = Integer.parseInt(args[6]);
 		app.loadGraph(args[1]);
 		app.loadProbabilities(args[2]);
@@ -83,12 +84,16 @@ public class LTC {
 		app.productId = app.movieRatings.keySet().iterator().next();
 		app.seedSet = app.runCELF(Integer.parseInt(args[0]));
 		Iterator<Integer> itr = app.seedSet.iterator();
+		System.out.println("Seed Set Node Ids");
 		while (itr.hasNext()) {
 			System.out.print(itr.next() + ", ");
 		}
+		System.out.println();
 		app.executorService.shutdown();
-		System.out.println(System.currentTimeMillis());
-		app.serializeMap("/tmp/graph_new.ser");
+		long end = System.currentTimeMillis();
+		System.out.print("Time Taken : ");
+		System.out.println((end - start) / 1000.0);
+		app.serializeMap("/tmp/graphviz.ser");
 	}
 
 	public void loadGraph(String edgeList) throws FileNotFoundException {
@@ -235,7 +240,7 @@ public class LTC {
 	public Set<Integer> runCELF(int k) throws IOException {
 		PriorityQueue<MarginalGain> gains = new PriorityQueue<MarginalGain>(1, new GainComparator());
 		Set<Integer> seed = new HashSet<Integer>();
-		float totalCoverage = 0.0f;
+		totalCoverage = 0.0f;
 
 		System.out.println("Calculating Spread for Nodes");
 		Iterator<Integer> itr = usersList.keySet().iterator();
@@ -253,7 +258,7 @@ public class LTC {
 		totalCoverage += nodeGain.gain;
 
 		System.out.println("Seed Size\tExpected Spread\tNode Id");
-		System.out.println("1\t" + totalCoverage + "\t" + nodeGain.nodeId);
+		System.out.println("1\t\t" + totalCoverage + "\t\t" + nodeGain.nodeId);
 		bw.write("Seed Size\tExpected Spread\tNode Id");
 		bw.newLine();
 		bw.write("1\t" + totalCoverage + "\t" + nodeGain.nodeId);
@@ -265,7 +270,7 @@ public class LTC {
 			// if marginal gain is more than the gain of the next element
 			if (gains.size() > 0 && newCoverage - totalCoverage >= gains.peek().gain) {
 				totalCoverage = newCoverage;
-				System.out.println(seed.size() + "\t" + totalCoverage + "\t" + tmpSeed.nodeId);
+				System.out.println(seed.size() + "\t\t" + totalCoverage + "\t\t" + tmpSeed.nodeId);
 				bw.newLine();
 				bw.write(seed.size() + "\t" + totalCoverage + "\t" + tmpSeed.nodeId);
 			} else {
@@ -284,10 +289,11 @@ public class LTC {
 			ObjectOutputStream out = new ObjectOutputStream(fileOut);
 			out.writeObject(usersList);
 			out.writeObject(seedSet);
+			out.writeObject(totalCoverage);
 			out.flush();
 			out.close();
 			fileOut.close();
-			System.out.printf("Serialized data is saved in graph.ser");
+			System.out.println("Serialized data is saved in graph.ser");
 		} catch (IOException i) {
 			i.printStackTrace();
 		}
@@ -299,6 +305,7 @@ public class LTC {
 			ObjectInputStream in = new ObjectInputStream(fileIn);
 			usersList = (ConcurrentHashMap<Integer, Node>) in.readObject();
 			seedSet = (Set<Integer>) in.readObject();
+			totalCoverage = (float) in.readObject();
 			in.close();
 			fileIn.close();
 		} catch (IOException i) {

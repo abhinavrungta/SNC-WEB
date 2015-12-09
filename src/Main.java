@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 
 public class Main {
@@ -10,16 +9,6 @@ public class Main {
 		String[] models = arg[1].split(",");
 		String seedSet = arg[2];
 		String monteCarlo = arg[3];
-
-		File _f = new File("Main.java");
-		try {
-			FILE_PATH = _f.getCanonicalFile().getParentFile().getCanonicalPath();
-		} catch (Exception e) {
-		}
-		_f = new File(FILE_PATH + "/datasets");
-		if (!_f.exists()) {
-			_f.mkdirs();
-		}
 
 		GraphGeneration graphGene = new GraphGeneration(trainFile);
 

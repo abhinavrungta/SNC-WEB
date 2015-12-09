@@ -44,7 +44,7 @@
  
         // Set chart options
         var options = {
-          title: 'Accuracy of Coverage',
+          title: 'Actual Coverage For Different Models',
           curveType: 'function',
           legend: { position: 'bottom' }
         };
