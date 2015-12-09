@@ -23,11 +23,16 @@ public class InputServlet extends HttpServlet {
 			models.add("color");
 		if ("on".equals(request.getParameter("classic")))
 			models.add("classic");
-		if ("on".equals(request.getParameter("ratings")))
+		if ("on".equals(request.getParameter("rating")))
 			models.add("ratings");
 		if ("on".equals(request.getParameter("tattle")))
 			models.add("tattle");
-		String modelString = String.join(",", models);
+		String modelString = "";
+		for (String str : models) {
+			modelString = modelString.concat(str + ",");
+		}
+		System.out.println(modelString);
+		modelString = modelString.substring(0, modelString.length() - 1);
 		String[] arg = new String[4];
 		arg[0] = "/tmp/input.txt";
 		arg[1] = modelString;

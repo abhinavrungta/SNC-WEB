@@ -51,7 +51,12 @@ public class FileUploadHandler extends HttpServlet {
 							models.add(item.getFieldName());
 					}
 				}
-				String modelString = String.join(",", models);
+				String modelString = "";
+				for (String str : models) {
+					modelString = modelString.concat(str + ",");
+				}
+				System.out.println(modelString);
+				modelString = modelString.substring(0, modelString.length() - 1);
 				int size = 30;
 				// System.out.println(modelString);
 				// get these from user input.

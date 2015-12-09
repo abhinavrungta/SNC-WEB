@@ -29,7 +29,7 @@
  
         // Set chart options
         var options = {
-          title: 'Coverage obtained with different models',
+          title: 'Expected Coverage Vs Seed Set Size',
           curveType: 'function',
           legend: { position: 'bottom' }
         };
@@ -44,7 +44,7 @@
  
         // Set chart options
         var options = {
-          title: 'Comparison of Accuracy',
+          title: 'Accuracy of Coverage',
           curveType: 'function',
           legend: { position: 'bottom' }
         };

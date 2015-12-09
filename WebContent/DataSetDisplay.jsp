@@ -65,10 +65,10 @@
    	</div>
    </div>
     <div>
-    <h3> Great, now choose the model</h3>
+    <h3> Great, now choose the model(s)</h3>
 		<form action="input" method="post">
         	LT Color <input type="checkbox" name="color" /> 
-            LT Classical <input type="checkbox"	name="classical" /> 
+            LT Classical <input type="checkbox"	name="classic" /> 
             LT Ratings <input type="checkbox"	name="rating" /> 
             LT Tattle <input type="checkbox" name="tattle" />
             <br />

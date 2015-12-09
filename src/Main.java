@@ -38,7 +38,7 @@ public class Main {
 				LTC.main(args);
 				break;
 			}
-			case "classical": {
+			case "classic": {
 				LTClassical.main(args);
 				break;
 			}
