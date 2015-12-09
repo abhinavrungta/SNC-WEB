@@ -57,7 +57,7 @@ public class GraphVisualization {
 		System.out.println("Total No Of Users : " + usersList.size());
 		System.out.println("Total No Of Edges : " + edgeCount);
 		System.out.println("Total No Of Seeds : " + seedSet.size());
-		System.out.println("Expected Spread for Seeds : " + app.totalCoverage);		
+		System.out.println("Expected Spread for Seeds : " + app.totalCoverage);
 
 		Viewer viewer = graph.display();
 	}

@@ -62,6 +62,7 @@ public class LTC {
 	FileOutputStream fos;
 	BufferedWriter bw;
 	int productId;
+	long noOfEdges;
 
 	public LTC() {
 		int cores = 16;
@@ -69,6 +70,7 @@ public class LTC {
 			cores = Integer.parseInt(System.getProperty("cores"));
 		executorService = Executors.newFixedThreadPool(cores);
 		productId = 0;
+		noOfEdges = 0;
 	}
 
 	public static void main(String[] args) throws NumberFormatException, IOException {
@@ -101,6 +103,7 @@ public class LTC {
 		usersList = new ConcurrentHashMap<Integer, Node>();
 		Scanner stdin = new Scanner(inputFile);
 		while (stdin.hasNext()) {
+			noOfEdges++;
 			String[] data = stdin.nextLine().split("\t");
 			int user1 = Integer.parseInt(data[0]);
 			int user2 = Integer.parseInt(data[1]);

@@ -41,28 +41,24 @@ public class SpreadServlet extends DataSourceServlet {
 		int size = 0;
 		List<ColumnDescription> cd = new ArrayList<ColumnDescription>();
 		cd.add(new ColumnDescription("seed_set_size", ValueType.NUMBER, "Seed Set Size"));
-		if (colorMap != null)
-		{
+		if (colorMap != null) {
 			cd.add(new ColumnDescription("color", ValueType.NUMBER, "LT-Color"));
 			size = colorMap.size();
 		}
-		if (classicalMap != null)
-		{
+		if (classicalMap != null) {
 			cd.add(new ColumnDescription("classic", ValueType.NUMBER, "LT-Classical"));
 			size = classicalMap.size();
 		}
-		if (ratingsMap != null)
-		{
+		if (ratingsMap != null) {
 			cd.add(new ColumnDescription("ratings", ValueType.NUMBER, "LT-Ratings"));
 			size = ratingsMap.size();
 		}
-		if (tattleMap != null)
-		{
+		if (tattleMap != null) {
 			cd.add(new ColumnDescription("tattle", ValueType.NUMBER, "LT-Tattle"));
 			size = tattleMap.size();
 		}
 		dataTable.addColumns(cd);
-		
+
 		System.out.println("Size is " + size);
 		for (int i = 1; i <= size; i++) {
 			TableRow row = new TableRow();

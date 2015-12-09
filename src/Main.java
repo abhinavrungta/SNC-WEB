@@ -1,8 +1,6 @@
 import java.io.IOException;
 
 public class Main {
-	private static String FILE_PATH;
-
 	@SuppressWarnings("unchecked")
 	public static void main(String[] arg) throws IOException {
 		String trainFile = arg[0];
@@ -37,6 +35,10 @@ public class Main {
 			}
 			case "tattle": {
 				LTTattle.main(args);
+				break;
+			}
+			case "tim": {
+				RIS.main(args);
 				break;
 			}
 			default:
