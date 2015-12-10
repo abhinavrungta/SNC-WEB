@@ -8,55 +8,65 @@
 <title>Model Comparison</title>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
-    google.load('visualization', '1.0', {
-        'packages' : [ 'corechart' ]
-    });
- 
-    google.setOnLoadCallback(init);
-    
-    function init() {
-    	var query = new google.visualization.Query('datasetanalysis');
-    	query.setQuery("select rating, count");
-        query.send(handleCountResponse);
-        
-        query = new google.visualization.Query('datasetanalysis');
-        query.setQuery("select rating, user");
-        query.send(handleUserResponse);
+	google.load('visualization', '1.0', {
+		'packages' : [ 'corechart' ]
+	});
 
-        drawToolbar();
-      }
- 
-    function handleCountResponse(response) {
-    	var data = response.getDataTable();
- 
-        // Set chart options
-        var options = {
-          title: 'Rating Distribution',
-          curveType: 'function',
-          legend: { position: 'bottom' },
-          vAxis: {title: "Number Of Ratings"}
-        };
- 
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-    }
-    
-    function handleUserResponse(response) {
-    	var data = response.getDataTable();
- 
-        // Set chart options
-        var options = {
-          title: 'User Rating Distribution',
-          curveType: 'function',
-          legend: { position: 'bottom' },
-          vAxis: {title: "Number Of Ratings"}
-        };
- 
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
-        chart.draw(data, options);
-    }
+	google.setOnLoadCallback(init);
+
+	function init() {
+		var query = new google.visualization.Query('datasetanalysis');
+		query.setQuery("select rating, count");
+		query.send(handleCountResponse);
+
+		query = new google.visualization.Query('datasetanalysis');
+		query.setQuery("select rating, user");
+		query.send(handleUserResponse);
+
+		drawToolbar();
+	}
+
+	function handleCountResponse(response) {
+		var data = response.getDataTable();
+
+		// Set chart options
+		var options = {
+			title : 'Rating Distribution',
+			curveType : 'function',
+			legend : {
+				position : 'bottom'
+			},
+			vAxis : {
+				title : "Number Of Ratings"
+			}
+		};
+
+		// Instantiate and draw our chart, passing in some options.
+		var chart = new google.visualization.ColumnChart(document
+				.getElementById('chart_div'));
+		chart.draw(data, options);
+	}
+
+	function handleUserResponse(response) {
+		var data = response.getDataTable();
+
+		// Set chart options
+		var options = {
+			title : 'User Rating Distribution',
+			curveType : 'function',
+			legend : {
+				position : 'bottom'
+			},
+			vAxis : {
+				title : "Number Of Ratings"
+			}
+		};
+
+		// Instantiate and draw our chart, passing in some options.
+		var chart = new google.visualization.ColumnChart(document
+				.getElementById('chart_div2'));
+		chart.draw(data, options);
+	}
 </script>
 </head>
 <body>
@@ -66,16 +76,43 @@
 			<div id="chart_div2" style="width: 50%; display: table-cell;"></div>
 		</div>
 	</div>
-	<div>
+	<br />
+	<div align=center>
 		<h3>Great, now choose the model(s)</h3>
+	</div>
+	<div align=center>
 		<form action="input" method="post">
-			LT Color <input type="checkbox" name="color" /> LT Classical <input
-				type="checkbox" name="classic" /> LT Ratings <input type="checkbox"
-				name="rating" /> LT Tattle <input type="checkbox" name="tattle" />
-			<br /> Intended Number of Seed Set <input type="text"
-				name="seed_set" /> <br /> Monte Carlo Simulations to be run <input
-				type="text" name="monte_carlo" /> <br /> Let's Go <input
-				type="submit" value="submit" />
+			<table>
+				<tr>
+					<td>LT Color</td>
+					<td><input type="checkbox" name="color" checked /></td>
+				</tr>
+				<tr>
+					<td>LT Classical</td>
+					<td><input type="checkbox" name="classic" checked /></td>
+				</tr>
+				<tr>
+					<td>LT Ratings</td>
+					<td><input type="checkbox" name="rating" checked /></td>
+				</tr>
+				<tr>
+					<td>LT Tattle</td>
+					<td><input type="checkbox" name="tattle" checked /></td>
+				</tr>
+				<tr>
+					<td>Intended Number of Seed Set</td>
+					<td><input type="text" name="seed_set" /></td>
+				</tr>
+				<tr>
+					<td>Monte Carlo Simulations to be run</td>
+					<td><input type="text" name="monte_carlo" /></td>
+				</tr>
+				<tr>
+					<td align=right><input type="submit" value="submit" /></td>
+					<td><input type="submit" value="Home" formaction="index.jsp" />
+					</td>
+				</tr>
+			</table>
 		</form>
 	</div>
 </body>

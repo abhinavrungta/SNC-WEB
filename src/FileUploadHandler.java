@@ -35,6 +35,7 @@ public class FileUploadHandler extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		deleteFiles("/tmp");
 		// process only if its multipart content
 		if (ServletFileUpload.isMultipartContent(request)) {
 			try {
@@ -85,6 +86,16 @@ public class FileUploadHandler extends HttpServlet {
 		System.out.println("Here");
 		request.getRequestDispatcher("/DataSetDisplay.jsp").forward(request, response);
 
+	}
+
+	private void deleteFiles(String dirName) {
+		File dir = new File(dirName);
+		File[] files = dir.listFiles();
+		for (File file : files) {
+			String fileName = file.getName();
+			if (fileName.endsWith("txt") && fileName.startsWith("output_"))
+				(new File(file.toString())).delete();
+		}
 	}
 
 }

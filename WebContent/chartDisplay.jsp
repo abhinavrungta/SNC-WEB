@@ -104,5 +104,15 @@
 		<div id="chart_div3"></div>
 		<div id="chart_div4"></div>
 	</div>
+	<br/>
+	<div align=center>
+		<form action="index.jsp" method="post">
+			<table>
+				<tr>
+					<td><input type="submit" value="Home" style="height:200px;width:200px"/></td>
+				</tr>
+			</table>
+		</form>
+	</div>
 </body>
 </html>

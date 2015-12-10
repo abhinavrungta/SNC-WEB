@@ -17,23 +17,26 @@ public class Main {
 		args[3] = graphGene.getAvgRateFile();
 		args[4] = graphGene.getMovieRateFile();
 		args[5] = trainFile;
-		args[6] = monteCarlo;
 		for (String model : models) {
 			System.out.println("Model is " + model);
 			switch (model) {
 			case "color": {
+				args[6] = monteCarlo;
 				LTC.main(args);
 				break;
 			}
 			case "classic": {
+				args[6] = "1";
 				LTClassical.main(args);
 				break;
 			}
 			case "ratings": {
+				args[6] = "1";
 				LTRatings.main(args);
 				break;
 			}
 			case "tattle": {
+				args[6] = monteCarlo;
 				LTTattle.main(args);
 				break;
 			}
