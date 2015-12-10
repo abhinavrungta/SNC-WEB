@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +39,21 @@ public class InputServlet extends HttpServlet {
 		arg[1] = modelString;
 		arg[2] = request.getParameter("seed_set");
 		arg[3] = request.getParameter("monte_carlo");
+		deleteFiles("/tmp");
 		Main.main(arg);
 
 		request.setAttribute("models", modelString);
 		request.getRequestDispatcher("/chartDisplay.jsp").forward(request, response);
+	}
+
+	private void deleteFiles(String dirName) {
+		File dir = new File(dirName);
+		File[] files = dir.listFiles();
+		for (File file : files) {
+			String fileName = file.getName();
+			if (fileName.endsWith("txt") && fileName.startsWith("output_"))
+				(new File(file.toString())).delete();
+		}
 	}
 
 }

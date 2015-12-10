@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,13 +30,13 @@ public class AccuracyServlet extends DataSourceServlet {
 		List<ColumnDescription> cd = new ArrayList<ColumnDescription>();
 		List<TableRow> rows = new ArrayList<TableRow>();
 		cd.add(new ColumnDescription("model", ValueType.TEXT, "model"));
-		cd.add(new ColumnDescription("adapters", ValueType.NUMBER, "adapters"));
+		cd.add(new ColumnDescription("adapters", ValueType.NUMBER, "Coverage"));
 		dataTable.addColumns(cd);
 		int color = getCount("/tmp/output_ltc.txt");
 		int classic = getCount("/tmp/output_ltclassic.txt");
 		int ratings = getCount("/tmp/output_ltratings.txt");
 		int tattle = getCount("/tmp/output_lttattle.txt");
-		rows.add(addRow("Actual", getActualCount("/tmp/input.txt")));
+		rows.add(addRow("Ground Truth", getActualCount("/tmp/input.txt")));
 		if (color != -1) {
 			cd.add(new ColumnDescription("color", ValueType.NUMBER, "LT-Color"));
 			rows.add(addRow("LT-Color", color));
@@ -64,9 +65,12 @@ public class AccuracyServlet extends DataSourceServlet {
 	}
 
 	private int getCount(String fileName) {
+		File file = new File(fileName);
+		if(!file.exists())
+			return -1;
 		try {
 			int count = 0;
-			FileReader fileReader = new FileReader(fileName);
+			FileReader fileReader = new FileReader(file);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			String line = bufferedReader.readLine();
 			while ((line = bufferedReader.readLine()) != null) {
